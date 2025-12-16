@@ -1,0 +1,124 @@
+// 測驗邏輯腳本 (依賴 data.js 中定義的 questions 陣列)
+
+document.addEventListener('DOMContentLoaded', () => {
+    const quizForm = document.getElementById('quiz-form');
+    const submitButton = document.getElementById('submit-button');
+    const resultsDiv = document.getElementById('results');
+    const scoreDisplay = document.getElementById('score-display');
+    const resetButton = document.getElementById('reset-button');
+
+    // 生成測驗題目
+    function renderQuiz() {
+        quizForm.innerHTML = ''; // 清空舊內容
+        questions.forEach((qData, index) => {
+            const qNum = index + 1;
+            const block = document.createElement('div');
+            block.className = 'question-block';
+            block.id = `q-${qNum}`;
+
+            let optionsHtml = '';
+            qData.options.forEach(option => {
+                const choiceLetter = option.substring(1, 2); // 提取 (A), (B), (C), (D) 中的 A, B, C, D
+                
+                optionsHtml += `
+                    <label>
+                        <input type="radio" name="q${qNum}" value="${choiceLetter}" required>
+                        ${option}
+                    </label>
+                `;
+            });
+
+            block.innerHTML = `
+                <div class="question-text">${qData.q}</div>
+                <div class="options">
+                    ${optionsHtml}
+                </div>
+                <div id="feedback-q${qNum}" class="feedback"></div>
+            `;
+            quizForm.appendChild(block);
+        });
+    }
+
+    // 提交測驗
+    function submitQuiz() {
+        // 檢查是否所有題目都已回答
+        let allAnswered = true;
+        let score = 0;
+        
+        // 驗證所有題目是否選取
+        questions.forEach((qData, index) => {
+            const qNum = index + 1;
+            const selectedOption = document.querySelector(`input[name="q${qNum}"]:checked`);
+            
+            if (!selectedOption) {
+                allAnswered = false;
+            }
+        });
+
+        if (!allAnswered) {
+            alert('警告：您必須完成所有 15 題，才能提交數據！');
+            return;
+        }
+
+        // 隱藏提交按鈕，顯示結果
+        submitButton.style.display = 'none';
+        resultsDiv.style.display = 'block';
+
+        // 鎖定所有選項並顯示解答
+        questions.forEach((qData, index) => {
+            const qNum = index + 1;
+            const feedbackDiv = document.getElementById(`feedback-q${qNum}`);
+            const selectedOption = document.querySelector(`input[name="q${qNum}"]:checked`);
+            
+            // 鎖定選項
+            document.querySelectorAll(`input[name="q${qNum}"]`).forEach(input => {
+                input.disabled = true;
+                
+                // 標記正確答案 (視覺效果)
+                if (input.value === qData.answer) {
+                    input.parentNode.style.borderColor = 'var(--color-success)';
+                    input.parentNode.style.backgroundColor = 'rgba(50, 205, 50, 0.2)';
+                }
+            });
+
+            const userAnswer = selectedOption ? selectedOption.value : null;
+
+            if (userAnswer === qData.answer) {
+                score++;
+                feedbackDiv.className = 'feedback correct';
+                feedbackDiv.innerHTML = '✔ [核心數據確認]：回答正確！';
+            } else {
+                feedbackDiv.className = 'feedback incorrect';
+                feedbackDiv.innerHTML = `❌ [數據錯誤警示]：回答錯誤。<div class="correct-answer-display">正確答案是 (${qData.answer})。</div><div style="margin-top:5px;">[解譯]: ${qData.explanation}</div>`;
+                
+                // 標記使用者錯誤的選項
+                if (selectedOption) {
+                    selectedOption.parentNode.style.backgroundColor = 'rgba(255, 69, 0, 0.2)';
+                }
+            }
+            feedbackDiv.style.display = 'block';
+        });
+
+        // 顯示最終分數
+        const percentage = (score / questions.length) * 100;
+        scoreDisplay.innerHTML = `${score} / ${questions.length} (${percentage.toFixed(0)}%)`;
+        
+        // 捲動到結果區
+        resultsDiv.scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    // 重設測驗
+    function resetQuiz() {
+        resultsDiv.style.display = 'none';
+        submitButton.style.display = 'block';
+        renderQuiz(); // 重新生成題目 (清除所有選中的選項和反饋)
+        window.scrollTo({ top: 0, behavior: 'smooth' }); // 捲動到頁面頂部
+    }
+    
+    // 事件監聽器
+    submitButton.addEventListener('click', submitQuiz);
+    resetButton.addEventListener('click', resetQuiz);
+
+    // 頁面載入時初始化測驗
+    renderQuiz();
+});
