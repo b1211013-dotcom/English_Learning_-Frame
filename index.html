@@ -1,34 +1,83 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
+    <title>TOEIC 550 數位學習網站</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TOEIC 550 詞彙檢測：星際領航</title>
+    
     <link rel="stylesheet" href="style.css"> 
+    
+    <style>
+        /* 原始框架的樣式（非科幻部分） */
+        body { margin: 0; padding: 0; }
+        header { background-color: #2c3e50; color: white; padding: 15px; text-align: center; }
+        nav { background-color: #34495e; display: flex; justify-content: center; flex-wrap: wrap; }
+        nav a { color: white; padding: 14px 20px; text-decoration: none; display: block; }
+        nav a:hover { background-color: #1abc9c; }
+        
+        /* 確保內容區域能顯示科幻測驗的視覺效果 */
+        #content { 
+            padding: 0; /* 移除 padding，讓測驗內容的 container 居中 */
+            display: flex;
+            justify-content: center;
+            min-height: 80vh; /* 確保內容區有足夠高度 */
+            background-color: var(--color-background); /* 與科幻背景色一致 */
+        }
+        
+        /* 初始歡迎訊息樣式 */
+        .welcome-content {
+            padding: 20px;
+            max-width: 800px;
+            margin: 20px;
+            background-color: #333;
+            color: #ccc;
+            border-radius: 8px;
+        }
+    </style>
 </head>
 <body>
-
-<div class="container">
-    <h1>TOEIC 550 詞彙檢測：星際領航</h1>
-    <p style="text-align: center; color: var(--color-primary);">-- 系統載入中... 請完成 15 題詞彙測試以獲得領航許可 --</p>
-
-    <form id="quiz-form">
-        </form>
-
-    <button id="submit-button">提交檢測數據</button>
-
-    <div id="results">
-        <h2>:: 數據分析報告 ::</h2>
-        <p>您的最終得分：</p>
-        <div id="score-display"></div>
-        <p>請檢閱下方題目以進行知識同步。</p>
-        <button id="reset-button" style="margin-top: 20px; width: auto; padding: 10px 20px;">重新啟動測試</button>
+    <header>
+        <h1>TOEIC 550 數位學習網站</h1>
+    </header>
+    <nav>
+        <a href="test1.html" onclick="loadPage(event, 'test1.html')">字彙測驗</a> 
+        <a href="test2.html" onclick="loadPage(event, 'test2.html')">文法測驗</a>
+        <a href="material1.html" onclick="loadPage(event, 'material1.html')">聖誕節單字</a>
+        <a href="about.html" onclick="loadPage(event, 'about.html')">製作團隊</a>
+    </nav>
+    <div id="content">
+        <div class="welcome-content">
+            <h2>歡迎來到 TOEIC 550 數位學習網站！</h2>
+            <p>請選擇上方選單開始學習。點擊**字彙測驗**即可進入星際領航模式！</p>
+        </div>
     </div>
 
-</div>
-
-<script src="data.js"></script>
-<script src="script.js"></script>
-
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+    
+    <script>
+        function loadPage(event, page) {
+            event.preventDefault();
+            fetch(page)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('content').innerHTML = data;
+                    
+                    // 【關鍵步驟】: 重新初始化載入頁面的 JavaScript 
+                    // 如果載入的頁面是測驗頁，需要調用 script.js 裡的初始化函數
+                    if (page === 'test1.html') {
+                        // 假設 script.js 中的初始化函數名為 initQuiz
+                        if (typeof initQuiz === 'function') {
+                            initQuiz();
+                        } else {
+                            console.error("initQuiz 函數未定義，請檢查 script.js 檔案。");
+                        }
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('content').innerHTML = "<p>無法載入內容。</p>";
+                });
+        }
+    </script>
 </body>
 </html>
