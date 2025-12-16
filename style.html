@@ -1,0 +1,203 @@
+/* --- CSS 樣式 --- */
+:root {
+    /* 科幻主題顏色 */
+    --color-primary: #00ffcc; /* 霓虹青綠 */
+    --color-secondary: #cc00ff; /* 賽博紫 */
+    --color-background: #0d0d1a; /* 深空藍黑 */
+    --color-surface: #1a1a33; /* 黑暗面板 */
+    --color-text: #e0e0e0; /* 星光白 */
+    --color-success: #32cd32; /* 螢光綠 */
+    --color-error: #ff4500; /* 彗星紅 */
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--color-background);
+    color: var(--color-text);
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://picsum.photos/1920/1080?random=1'); /* 隨機科幻背景圖 */
+    background-size: cover;
+    background-attachment: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+}
+
+.container {
+    background-color: var(--color-surface);
+    border-radius: 15px;
+    box-shadow: 0 0 40px var(--color-primary);
+    padding: 30px;
+    max-width: 900px;
+    width: 100%;
+    border: 2px solid var(--color-primary);
+    position: relative;
+}
+
+h1 {
+    color: var(--color-primary);
+    text-align: center;
+    text-shadow: 0 0 10px var(--color-primary), 0 0 20px var(--color-secondary);
+    margin-bottom: 30px;
+    border-bottom: 2px solid var(--color-secondary);
+    padding-bottom: 10px;
+}
+
+.question-block {
+    background-color: #26264d;
+    border: 1px solid var(--color-secondary);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.question-block:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 255, 204, 0.3);
+}
+
+.question-text {
+    font-size: 1.1em;
+    margin-bottom: 15px;
+    color: var(--color-text);
+    font-weight: bold;
+}
+
+.options label {
+    display: block;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #4d4d80;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+    background-color: #333366;
+    color: var(--color-text);
+}
+
+.options label:hover {
+    background-color: #404080;
+    border-color: var(--color-primary);
+}
+
+.options input[type="radio"] {
+    margin-right: 10px;
+    /* 隱藏原生 radio 按鈕並使用自定義樣式 */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    border: 2px solid var(--color-primary);
+    border-radius: 50%;
+    outline: none;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+}
+
+.options input[type="radio"]:checked {
+    background-color: var(--color-primary);
+    box-shadow: 0 0 5px var(--color-primary);
+}
+
+/* 答案反饋樣式 */
+.feedback {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    display: none; /* 初始隱藏 */
+    border-left: 5px solid;
+}
+
+.correct {
+    background-color: rgba(50, 205, 50, 0.1); /* 螢光綠背景 */
+    color: var(--color-success);
+    border-left-color: var(--color-success);
+}
+
+.incorrect {
+    background-color: rgba(255, 69, 0, 0.1); /* 彗星紅背景 */
+    color: var(--color-error);
+    border-left-color: var(--color-error);
+}
+
+.correct-answer-display {
+    font-style: italic;
+    margin-top: 5px;
+    color: var(--color-secondary);
+}
+
+button {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background-color: var(--color-primary);
+    color: var(--color-background);
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 30px;
+    transition: background-color 0.3s, box-shadow 0.3s, transform 0.1s;
+    text-transform: uppercase;
+}
+
+button:hover {
+    background-color: #33ff99; /* 亮一點 */
+    box-shadow: 0 0 20px var(--color-primary);
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+#results {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #333366;
+    border: 2px solid var(--color-secondary);
+    border-radius: 10px;
+    text-align: center;
+    display: none;
+    animation: fadeIn 1s;
+}
+
+#results h2 {
+    color: var(--color-secondary);
+    text-shadow: 0 0 8px var(--color-secondary);
+}
+
+#score-display {
+    font-size: 2.5em;
+    font-weight: bold;
+    margin: 15px 0;
+    color: var(--color-primary);
+    text-shadow: 0 0 15px var(--color-primary);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* 儀表板/介面裝飾 */
+.container::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    background: linear-gradient(45deg, var(--color-primary), var(--color-secondary));
+    z-index: -1;
+    filter: blur(8px);
+    border-radius: 20px;
+    opacity: 0.5;
+}
